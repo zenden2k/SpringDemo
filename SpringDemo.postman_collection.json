@@ -1,0 +1,475 @@
+{
+	"info": {
+		"_postman_id": "40f5cf7d-47b0-4a7e-a2e3-f44dc8e02533",
+		"name": "SpringDemo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15277104"
+	},
+	"item": [
+		{
+			"name": "User contacts",
+			"item": [
+				{
+					"name": "Get all user contacts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user_contacts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user_contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user contacts by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/user_contacts/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user_contacts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user contacts",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Григорий\",\r\n    \"email\": \"grigor@mail.ru\",\r\n    \"phoneNumber\": \"89556663322\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user_contacts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user_contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user contacts",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Анатолий\",\r\n    \"email\": \"anatolii@gmail.com\",\r\n    \"phoneNumber\": \"+792145455555\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user_contacts/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user_contacts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user (permanently)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user_contacts/257657",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user_contacts",
+								"257657"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User details",
+			"item": [
+				{
+					"name": "Get all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users?sort=email,desc",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "firstName",
+									"value": "Сергей",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "test@example.com",
+									"disabled": true
+								},
+								{
+									"key": "phoneNumber",
+									"value": "9556663322",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "email,desc"
+								},
+								{
+									"key": "birthDateFrom",
+									"value": "1985-01-01",
+									"disabled": true
+								},
+								{
+									"key": "birthDateTo",
+									"value": "1986-01-01",
+									"disabled": true
+								},
+								{
+									"key": "id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/users/5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Сергей\",\r\n    \"lastName\": \"Иванов\",\r\n    \"middleName\": \"Михайлович\",\r\n    \"email\": \"test@example.com\",\r\n    \"birthDate\": \"1983-11-12\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Валентин\",\r\n    \"lastName\": \"Сидоров\",\r\n    \"middleName\": \"Олегович\",\r\n    \"email\": \"sidorov@ya.ru\",\r\n    \"birthDate\": \"1965-05-25\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clear user details",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User photos",
+			"item": [
+				{
+					"name": "Upload user photo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/user/Pictures/логотип для веб-браузера с высокой скоростью работы2.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user_photo/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user_photo",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user photo",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/user_photo/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user_photo",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user photo",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Сергей\",\r\n    \"lastName\": \"Иванов\",\r\n    \"middleName\": \"Михайлович\",\r\n    \"email\": \"test@example.com\",\r\n    \"birthDate\": \"1983-11-12\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user_photo/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user_photo",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users photos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user_photo",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user_photo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users photos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user_photo",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user_photo"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "admin",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "admin",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
