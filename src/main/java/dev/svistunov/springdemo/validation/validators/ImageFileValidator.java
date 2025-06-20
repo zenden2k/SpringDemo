@@ -32,12 +32,12 @@ public class ImageFileValidator implements ConstraintValidator<ValidImage, Multi
                     .addConstraintViolation();
             return false;
         }
-        String contentType = /*multipartFile.getContentType()*/null;
+        String contentType = multipartFile.getContentType();
 
         try {
             InputStream is = multipartFile.getInputStream();
-            if (is.markSupported()) {
-                is.mark(100);
+            if (is.markSupported()) { // В тестах поддерживается, в приложении - нет
+               is.mark(100);
 
                 MagicMatch match = Magic.getMagicMatch(is.readNBytes(100), false);
                 contentType = match.getMimeType();
@@ -59,12 +59,10 @@ public class ImageFileValidator implements ConstraintValidator<ValidImage, Multi
             result = false;
         }
 
-
-
         return result;
     }
 
-    private boolean isSupportedContentType(String contentType) {
+    public static boolean isSupportedContentType(String contentType) {
         return contentType.equals("image/png")
                 || contentType.equals("image/jpg")
                 || contentType.equals("image/jpeg");

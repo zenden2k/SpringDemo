@@ -11,3 +11,9 @@ CREATE TABLE IF NOT EXISTS users
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX IF NOT EXISTS idx_users_last_name ON users(last_name);
+CREATE INDEX IF NOT EXISTS idx_users_first_name ON users(first_name);
+CREATE INDEX IF NOT EXISTS idx_users_middle_name ON users(middle_name);
+CREATE INDEX IF NOT EXISTS idx_users_full_name ON users(last_name, first_name, middle_name);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);

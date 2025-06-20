@@ -12,19 +12,17 @@ public class UserDetailsDto {
     private Long id;
 
     @NotBlank
-    @ValidName
     private String firstName;
 
-    @ValidName
     private String lastName;
 
-    @ValidName
     private String middleName;
 
-    @Email
     private String email;
 
     private String phoneNumber;
 
     private LocalDate birthDate;
+
+    private String photoUrl;
 }

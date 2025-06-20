@@ -79,7 +79,7 @@ public class UserContactsControllerTest {
     }
 
     @Test
-    void user_whenGetFiltered_thenStatus200Returned() throws Exception {
+    void users_whenGetFiltered_thenStatus200Returned() throws Exception {
         mockMvc.perform(get("/api/user_contacts")
                         .header("Authorization", getAuthorization())
                         .queryParam("firstName", "Михаил")

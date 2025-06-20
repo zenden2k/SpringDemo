@@ -49,4 +49,10 @@ public class ErrorHandlingAdvice {
     public ErrorResponse handleUserNotFound(UserNotFoundException ex) {
         return new ErrorResponse(ex.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(FileValidationException.class)
+    public ErrorResponse handleBadFileUpload(FileValidationException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
 }

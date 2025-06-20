@@ -1,9 +1,8 @@
 package dev.svistunov.springdemo.dto.response;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Data;
 
 @Data
 public class UserContactsDto {
@@ -13,7 +12,6 @@ public class UserContactsDto {
     @NotBlank
     private String firstName;
 
-    @Email
     private String email;
 
     private String phoneNumber;

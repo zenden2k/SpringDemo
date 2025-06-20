@@ -111,9 +111,8 @@ public class UserPhotoControllerTest {
     public void givenId_whenUploadPhoto_thenStatus200andUserReturned() throws Exception {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream("linux.jpg")) {
             Assertions.assertNotNull(is);
-            byte[] bytes = is.readAllBytes();
 
-            MockMultipartFile firstFile = new MockMultipartFile("file", "filename.jpg", "image/jpg", bytes);
+            MockMultipartFile firstFile = new MockMultipartFile("file", "filename.jpg", "image/jpg", is);
 
             mockMvc.perform(multipart("/api/user_photo/1").file(firstFile)
                             .header("Authorization", getAuthorization())
@@ -125,7 +124,7 @@ public class UserPhotoControllerTest {
 
     @Test
     public void  givenId_whenUploadBadPhoto_thenStatus200andUserReturned() throws Exception {
-        MockMultipartFile firstFile = new MockMultipartFile("file", "filename.json", "applcation/json", "{}".getBytes());
+        MockMultipartFile firstFile = new MockMultipartFile("file", "filename.json", "application/json", "{}".getBytes());
 
         mockMvc.perform(multipart("/api/user_photo/1").file(firstFile)
                         .header("Authorization", getAuthorization())

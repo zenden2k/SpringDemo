@@ -2,10 +2,12 @@ package dev.svistunov.springdemo.controller;
 
 import dev.svistunov.springdemo.dto.response.UserPhotoDto;
 
+import dev.svistunov.springdemo.exception.FileValidationException;
 import dev.svistunov.springdemo.services.PhotoService;
 import dev.svistunov.springdemo.services.UserService;
 import dev.svistunov.springdemo.util.MimeUtil;
 import dev.svistunov.springdemo.validation.annotations.ValidImage;
+import dev.svistunov.springdemo.validation.validators.ImageFileValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import net.sf.jmimemagic.*;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -66,29 +70,30 @@ public class UserPhotoController {
             String filename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
             Path filePath = targetPath.resolve(filename);
 
+            Files.copy(file.getInputStream(), filePath);
+
+            File initialFile = new File(filePath.toUri());
             String contentType = "application/octet-stream";
-            try {
-                InputStream is = file.getInputStream();
-                if (is.markSupported()) {
-                    is.mark(100);
 
-                    MagicMatch match = Magic.getMagicMatch(is.readNBytes(100), false);
-                    contentType = match.getMimeType();
-
-                    // Возвращаемся в начало
-                    is.reset();
-                }
+            try (InputStream fileStream = new FileInputStream(initialFile)) {
+                MagicMatch match = Magic.getMagicMatch(fileStream.readNBytes(100), false);
+                contentType = match.getMimeType();
             } catch (IOException e) {
                 log.error("Ошибка при чтении файла {}", e.getMessage());
             } catch (MagicException | MagicParseException | MagicMatchNotFoundException e) {
                 log.error("Ошибка при определении Content Type: {}", e.getMessage());
             }
 
+            if (!ImageFileValidator.isSupportedContentType(contentType)) {
+                throw new FileValidationException("Разрешены только JPEG и PNG файлы.");
+            }
+            // Переименовываем файл согласно его mime type
             String ext = MimeUtil.getExtensionByMimeType(contentType);
             Path newPath = MimeUtil.changeExtension(filePath, ext);
-            Files.copy(file.getInputStream(), newPath);
 
-            return ResponseEntity.ok(userService.updateUserPhoto(id, filename));
+            Files.move(filePath, newPath);
+
+            return ResponseEntity.ok(userService.updateUserPhoto(id, newPath.getFileName().toString()));
         } catch (IOException e) {
             log.error("Ошибка при загрузке фото: {}", e.getMessage());
             return ResponseEntity.internalServerError().build();
