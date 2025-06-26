@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
@@ -46,6 +47,12 @@ public class UserPhotoControllerTest {
 
     @Autowired
     private WebApplicationContext context;
+
+    @Value("${app.dynamic.admin-login}")
+    private String adminLogin;
+
+    @Value("${app.dynamic.admin-password}")
+    private String adminPassword;
 
     private static final byte[] PNG_SIGNATURE = {
             (byte) 0x89, (byte) 0x50, (byte) 0x4E, (byte) 0x47,
@@ -171,7 +178,7 @@ public class UserPhotoControllerTest {
     }
 
     private String getAuthorization() {
-        final String auth = "admin:admin";
+        final String auth = adminLogin + ":" + adminPassword;
         return "Basic " + Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
     }
 }

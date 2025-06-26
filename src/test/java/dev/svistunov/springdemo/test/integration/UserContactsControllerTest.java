@@ -10,6 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -46,6 +47,12 @@ public class UserContactsControllerTest {
 
     @Autowired
     private WebApplicationContext context;
+
+    @Value("${app.dynamic.admin-login}")
+    private String adminLogin;
+
+    @Value("${app.dynamic.admin-password}")
+    private String adminPassword;
 
     @BeforeEach
     void setup() {
@@ -225,7 +232,7 @@ public class UserContactsControllerTest {
     }
 
     private String getAuthorization() {
-        final String auth = "admin:admin";
+        final String auth = adminLogin + ":" + adminPassword;
         return "Basic " + Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
     }
 }

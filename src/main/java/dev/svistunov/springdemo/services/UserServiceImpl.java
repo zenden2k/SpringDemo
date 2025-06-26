@@ -3,65 +3,69 @@ package dev.svistunov.springdemo.services;
 import dev.svistunov.springdemo.dto.request.UserContactsInputDto;
 import dev.svistunov.springdemo.dto.request.UserContactsSearchDto;
 import dev.svistunov.springdemo.dto.response.UserContactsDto;
-import dev.svistunov.springdemo.dto.response.UserPhotoDto;
 import dev.svistunov.springdemo.exception.UserNotFoundException;
 import dev.svistunov.springdemo.model.User;
 import dev.svistunov.springdemo.repository.UserRepository;
+import dev.svistunov.springdemo.services.interfaces.UserContactsMapper;
+import dev.svistunov.springdemo.services.interfaces.UserService;
 import dev.svistunov.springdemo.util.PhoneNumberUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 
 @Service
-public class UserService {
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final UserContactsMapper contactsModelMapper;
-    private final PhotoService photoService;
 
-    UserService(UserRepository userRepository, ModelMapper modelMapper, UserContactsMapper contactsModelMapper,
-                UserDetailsMapper detailsModelMapper, PhotoService photoService, Environment env) {
+    UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, UserContactsMapper contactsModelMapper) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.contactsModelMapper = contactsModelMapper;
-        this.photoService = photoService;
     }
 
     // Работа с пользователями
+    @Override
     public User save(User user) {
         return userRepository.save(user);
     }
 
+    @Override
     public List<User> getAll() {
         return userRepository.findAll();
     }
 
+    @Override
     public User getById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
+    @Override
     public User create(User user) {
         return userRepository.save(user);
     }
 
+    @Override
     public UserContactsDto createUserContact(UserContactsInputDto userDto) {
         User user = contactsModelMapper.toEntity(userDto);
         User createdUser = userRepository.save(user);
         return contactsModelMapper.toDto(createdUser);
     }
 
+    @Override
     public User update(Long id, User user) {
         User oldUser = this.getById(id);
         modelMapper.map(user, oldUser);
         return userRepository.save(oldUser);
     }
 
+    @Override
     public void delete(Long id) {
         if (!userRepository.existsById(id)) {
             throw new UserNotFoundException(id);
@@ -70,6 +74,7 @@ public class UserService {
     }
 
     // Работа с контактной информацией
+    @Override
     public List<UserContactsDto> getAllContacts() {
         return userRepository.findAll()
                 .stream()
@@ -134,45 +139,4 @@ public class UserService {
         User savedUser = userRepository.save(user);
         return contactsModelMapper.toDto(savedUser);
     }
-
-    // Работа с фото пользователя
-    public Page<UserPhotoDto> getAllUserPhotos(Pageable pageable) {
-        return userRepository.findAll(pageable)
-                .map((user) -> new UserPhotoDto(user.getId(),
-                        photoService.getUserPhotoUrl(user.getPhoto()))
-                );
-    }
-
-    public UserPhotoDto getUserPhotoUrl(Long id) {
-        User user = this.getById(id);
-        String photo = user.getPhoto();
-        return new UserPhotoDto(id, photoService.getUserPhotoUrl(photo));
-    }
-
-    public UserPhotoDto updateUserPhoto(Long id, String filename) {
-        User user = this.getById(id);
-        String photo = user.getPhoto();
-
-        // Удаляем файл старого фото из хранилища (с диска)
-        if (StringUtils.hasText(photo)) {
-            photoService.deletePhoto(photo);
-        }
-        user.setPhoto(filename);
-        userRepository.save(user);
-        return new UserPhotoDto(id, photoService.getUserPhotoUrl(filename));
-    }
-
-    public void deleteUserPhoto(Long id) {
-        User user = this.getById(id);
-        String photo = user.getPhoto();
-
-        // Удаляем файл из хранилища
-        if (StringUtils.hasText(photo)) {
-            photoService.deletePhoto(photo);
-        }
-        user.setPhoto(null);
-        userRepository.save(user);
-    }
-
-
 }

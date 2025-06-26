@@ -6,6 +6,8 @@ import dev.svistunov.springdemo.dto.response.UserDetailsDto;
 import dev.svistunov.springdemo.exception.UserNotFoundException;
 import dev.svistunov.springdemo.model.User;
 import dev.svistunov.springdemo.repository.UserRepository;
+import dev.svistunov.springdemo.services.interfaces.UserDetailService;
+import dev.svistunov.springdemo.services.interfaces.UserDetailsMapper;
 import dev.svistunov.springdemo.util.PhoneNumberUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.env.Environment;
@@ -18,19 +20,20 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 @Service
-public class UserDetailService {
+public class UserDetailServiceImpl implements UserDetailService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final UserDetailsMapper detailsModelMapper;
 
-    UserDetailService(UserRepository userRepository, ModelMapper modelMapper, UserContactsMapper contactsModelMapper,
-                      UserDetailsMapper detailsModelMapper, PhotoService photoService, Environment env) {
+    UserDetailServiceImpl(UserRepository userRepository, ModelMapper modelMapper,
+                          UserDetailsMapper detailsModelMapper, Environment env) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.detailsModelMapper = detailsModelMapper;
     }
 
     // Работа с детальной информацией
+    @Override
     public List<UserDetailsDto> getAllUserDetails() {
         return userRepository.findAll()
                 .stream()
@@ -38,6 +41,7 @@ public class UserDetailService {
                 .toList();
     }
 
+    @Override
     public User getById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
@@ -48,6 +52,7 @@ public class UserDetailService {
      * @param pageable
      * @return
      */
+    @Override
     public Page<UserDetailsDto> searchUserDetails(UserDetailsSearchDto searchDto, Pageable pageable) {
         Specification<User> spec = (root, query, cb) -> null;
 
@@ -99,27 +104,11 @@ public class UserDetailService {
             );
         }
 
-        /*Sort sort = null;
-        Sort.Direction direction = Sort.Direction.ASC;
-        if (StringUtils.hasText(sortStr)){
-            String[] tokens = sortStr.split(",", 2);
-
-            if (tokens.length != 0) {
-                if (tokens.length == 2) {
-                    direction = tokens[1].equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-                }
-                sort = Sort.by(new Sort.Order(direction, tokens[0]));
-            }
-        }
-
-        if (sort == null){
-            sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
-        }*/
-
         return userRepository.findAll(spec, pageable)
                 .map(detailsModelMapper::toDto);
     }
 
+    @Override
     public UserDetailsDto createUserDetails(UserDetailsInputDto userDetailsDto) {
         User user = detailsModelMapper.toEntity(userDetailsDto);
         User savedUser = userRepository.save(user);
@@ -130,11 +119,13 @@ public class UserDetailService {
         return modelMapper.map(user, UserDetailsDto.class);
     }
 
+    @Override
     public UserDetailsDto getUserDetailsById(Long id) {
         User user = getById(id);
         return detailsModelMapper.toDto(user);
     }
 
+    @Override
     public UserDetailsDto updateUserDetails(Long id, UserDetailsInputDto userDetailsDto) {
         User user = getById(id);
         modelMapper.map(userDetailsDto, user);
@@ -143,6 +134,7 @@ public class UserDetailService {
         return detailsModelMapper.toDto(savedUser);
     }
 
+    @Override
     public void deleteUserDetails(Long id) {
         User user = this.getById(id);
         user.setLastName(null);

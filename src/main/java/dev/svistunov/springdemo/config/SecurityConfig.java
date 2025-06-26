@@ -1,7 +1,9 @@
 package dev.svistunov.springdemo.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
@@ -14,6 +16,11 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationEn
 
 @Configuration
 public class SecurityConfig {
+    private final Environment env;
+
+    public SecurityConfig(Environment env) {
+        this.env = env;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -35,8 +42,8 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         UserDetails user = User.withDefaultPasswordEncoder()
-                .username("admin")
-                .password("admin")
+                .username(env.getProperty("app.dynamic.admin-login"))
+                .password(env.getProperty("app.dynamic.admin-password"))
                 .roles("ADMIN")
                 .build();
 

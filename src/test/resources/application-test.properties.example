@@ -7,3 +7,6 @@ spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
 spring.jpa.hibernate.ddl-auto=create-drop
 logging.level.org.springframework=DEBUG
+
+app.dynamic.admin-login=
+app.dynamic.admin-password=
